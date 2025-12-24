@@ -1,0 +1,177 @@
+{% extends "lockers/base.html" %}
+{% block title %}Lockers - Pelicoli{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .status-active {
+        background: #10b981;
+        color: white;
+    }
+    .status-inactive {
+        background: #ef4444;
+        color: white;
+    }
+    .filter-section {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    .filter-section select {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>📦 Lockers</h1>
+
+<div class="card">
+    <div class="filter-section">
+        <label><strong>Filtrer par statut :</strong></label>
+        <select id="statusFilter">
+            <option value="">Tous</option>
+            <option value="active">Actifs</option>
+            <option value="inactive">Inactifs</option>
+        </select>
+
+        <label><strong>Filtrer par emplacement :</strong></label>
+        <select id="locationFilter">
+            <option value="">Tous les emplacements</option>
+        </select>
+    </div>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Emplacement</th>
+                <th>Type d'emplacement</th>
+                <th>Région</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody id="lockersTable">
+            <tr>
+                <td colspan="5" style="text-align: center; color: #666;">Chargement...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let allLockers = [];
+let allLocations = [];
+
+async function loadLockers() {
+    allLockers = await apiCall('/lockers/');
+    allLocations = await apiCall('/locations/');
+
+    if (!allLockers || !allLocations) {
+        document.getElementById('lockersTable').innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; color: #ef4444;">
+                    Erreur lors du chargement des données
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    console.log('Lockers chargés:', allLockers);
+    console.log('Locations chargées:', allLocations);
+
+    populateLocationFilter();
+    displayLockers();
+}
+
+function populateLocationFilter() {
+    const select = document.getElementById('locationFilter');
+    
+    allLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location.id;
+        option.textContent = location.name;
+        select.appendChild(option);
+    });
+}
+
+function displayLockers() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const locationFilter = document.getElementById('locationFilter').value;
+
+    let filteredLockers = allLockers;
+
+    // Filtrer par statut
+    if (statusFilter === 'active') {
+        filteredLockers = filteredLockers.filter(l => l.is_active);
+    } else if (statusFilter === 'inactive') {
+        filteredLockers = filteredLockers.filter(l => !l.is_active);
+    }
+
+    // Filtrer par emplacement
+    if (locationFilter) {
+        filteredLockers = filteredLockers.filter(l => l.location === parseInt(locationFilter));
+    }
+
+    if (filteredLockers.length === 0) {
+        document.getElementById('lockersTable').innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; color: #666;">
+                    Aucun locker trouvé
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    function getTypeLabel(type) {
+        const labels = {
+            'SUPERMARKET': 'Supermarché',
+            'STATION': 'Station-service',
+            'GARE': 'Gare routière'
+        };
+        return labels[type] || type;
+    }
+
+    document.getElementById('lockersTable').innerHTML = filteredLockers.map(l => {
+        const loc = allLocations.find(x => x.id === l.location);
+        const statusClass = l.is_active ? 'status-active' : 'status-inactive';
+        const statusText = l.is_active ? '✓ Actif' : '✗ Inactif';
+        
+        return `
+            <tr>
+                <td><strong>${l.code}</strong></td>
+                <td>${loc ? loc.name : 'N/A'}</td>
+                <td>${loc ? getTypeLabel(loc.location_type) : 'N/A'}</td>
+                <td>${loc ? loc.region : 'N/A'}</td>
+                <td>
+                    <span class="status-badge ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Event listeners pour les filtres
+document.getElementById('statusFilter').addEventListener('change', displayLockers);
+document.getElementById('locationFilter').addEventListener('change', displayLockers);
+
+loadLockers();
+</script>
+{% endblock %}

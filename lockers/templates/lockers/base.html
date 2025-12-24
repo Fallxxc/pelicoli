@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pelicoli{% endblock %}</title>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Global styles -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        nav a {
+            color: #d1d5db;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: white;
+        }
+        .user-actions {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+        .user-actions a {
+            background: #2563eb;
+            color: white;
+            padding: 6px 12px;
+            margin-left: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .user-actions a:hover {
+            background: #1e40af;
+        }
+        main {
+            padding: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header>
+    <h2>📦 PELICOLI</h2>
+    <nav>
+        <a href="/index">Carte</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/locations/">Emplacements</a>
+        <a href="/lockers/">Lockers</a>
+        <a href="/analytics/">Analyses</a>
+
+        <!-- Actions utilisateur -->
+        <div class="user-actions">
+            <!-- Cercle avec initiales -->
+             <a href="/profile/">
+            <div class="user-initials" title="{{ request.user.username }}">
+                {{ request.user.username|slice:":2"|upper }}
+            </div>
+            </a>
+            <a href="/logout/">Déconnexion</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+async function apiCall(endpoint) {
+    try {
+        const response = await fetch('/api' + endpoint);
+        if (!response.ok) {
+            console.error('Erreur API:', response.status);
+            return null;
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors de l\'appel API:', error);
+        return null;
+    }
+}
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

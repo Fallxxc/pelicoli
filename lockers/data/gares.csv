@@ -1,0 +1,16 @@
+name,category,lat,lng,region,address,commune_name,estimated_traffic
+Gare Petersen, bus_station,14.6766,-17.4346,Dakar,Plateau,Dakar,15000
+Gare Liberté, bus_station,14.6935,-17.4460,Dakar,Liberté,Dakar,12000
+Gare Mermoz, bus_station,14.7060,-17.4780,Dakar,Mermoz,Dakar,11000
+Gare Yoff, bus_station,14.7380,-17.4920,Dakar,Yoff,Dakar,9000
+Gare Guédiawaye, bus_station,14.7520,-17.3800,Dakar,Guédiawaye,Dakar,8000
+Gare Pikine, bus_station,14.7160,-17.4500,Dakar,Pikine,Dakar,7500
+Gare Rufisque, bus_station,14.7150,-17 .3000,Thiès,Rufisque,Thiès,7000
+Gare Thiès, bus_station,14.7900,-17.0670,Thiès,Thiès,Thiès,8000
+Gare Saint-Louis, bus_station,16.0200,-16.4890,Saint-Louis,Saint-Louis,Saint-Louis,5000
+Gare Ziguinchor, bus_station,12.5725,-16.2710,Ziguinchor,Ziguinchor,Ziguinchor,4000
+Gare Mbour, bus_station,14.4305,-16.9705,Mbour,Mbour,Mbour,6000
+Gare Kaolack, bus_station,14.150  0,-16.0830,Kaolack,Kaolack,Kaolack,3000
+Gare Louga, bus_station,15.6175,-16.2505,Louga,Louga,Louga,3500
+Gare Kolda, bus_station,12  .8838,-14.9505,Kolda,Kolda,Kolda,2500
+Gare Tambacounda, bus_station,13.7810,-13.6710 ,Tambacounda,Tambacounda,Tambacounda,2000

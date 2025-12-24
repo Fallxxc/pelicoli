@@ -1,0 +1,227 @@
+{% extends "lockers/base.html" %}
+{% block title %}Carte des Lockers - Pelicoli{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-bar {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    select {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    #map {
+        height: 600px;
+        border-radius: 12px;
+    }
+    .stats-bar {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        flex: 1;
+        text-align: center;
+    }
+    .stat-card h3 {
+        margin: 0;
+        font-size: 32px;
+    }
+    .stat-card p {
+        margin: 5px 0 0 0;
+        font-size: 12px;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>🗺️ Carte des Lockers</h1>
+
+<div class="stats-bar">
+    <div class="stat-card">
+        <h3 id="totalLocations">0</h3>
+        <p>Emplacements</p>
+    </div>
+    <div class="stat-card">
+        <h3 id="totalLockers">0</h3>
+        <p>Lockers</p>
+    </div>
+    <div class="stat-card">
+        <h3 id="activeLockers">0</h3>
+        <p>Lockers actifs</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="filter-bar">
+        <label><strong>Type :</strong></label>
+        <select id="typeFilter">
+            <option value="">Tous</option>
+            <option value="SUPERMARKET">Supermarchés</option>
+            <option value="STATION">Stations-service</option>
+            <option value="GARE">Gares routières</option>
+        </select>
+
+        <label><strong>Région :</strong></label>
+        <select id="regionFilter">
+            <option value="">Toutes les régions</option>
+        </select>
+    </div>
+</div>
+
+<div class="card">
+    <div id="map"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialisation de la carte centrée sur Dakar
+    const map = L.map('map').setView([14.6928, -17.4467], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let locations = [];
+    let lockers = [];
+    let markers = [];
+
+    function clearMarkers() {
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+    }
+
+    // Afficher tous les lockers
+    function renderMap(selectedRegion = '', selectedType = '') {
+        clearMarkers();
+
+        // Index des locations
+        const locationMap = {};
+        locations.forEach(loc => {
+            locationMap[loc.id] = loc;
+        });
+
+        const filteredLockers = lockers.filter(locker => {
+            const loc = locationMap[locker.location];
+            if (!loc) return false;
+
+            if (selectedRegion && loc.region !== selectedRegion) return false;
+            if (selectedType && loc.location_type !== selectedType) return false;
+
+            // Héritage des coordonnées depuis la location si locker n’a pas de lat/lng
+            return loc.latitude && loc.longitude;
+        });
+
+        filteredLockers.forEach(locker => {
+            const loc = locationMap[locker.location];
+
+            const color = locker.is_active ? '#10b981' : '#ef4444';
+
+            const markerIcon = L.divIcon({
+                html: `
+                    <div style="
+                        width:18px;
+                        height:18px;
+                        background:${color};
+                        border-radius:50%;
+                        border:3px solid #fff;
+                        box-shadow:0 2px 6px rgba(0,0,0,.4);
+                    "></div>
+                `,
+                iconSize: [18, 18],
+                iconAnchor: [9, 9],
+                className: ''
+            });
+
+            const marker = L.marker(
+                [loc.latitude, loc.longitude],
+                { icon: markerIcon }
+            ).addTo(map);
+
+            marker.bindPopup(`
+                <div style="min-width:220px">
+                    <h4 style="margin:0 0 8px 0">🔒 ${locker.code}</h4>
+                    <p style="font-size:13px">
+                        <strong>Statut :</strong> ${locker.is_active ? '✅ Actif' : '❌ Inactif'}<br>
+                        <strong>Site :</strong> ${loc.name}<br>
+                        <strong>Type :</strong> ${getTypeLabel(loc.location_type)}<br>
+                        <strong>Commune :</strong> ${loc.commune || 'N/A'}<br>
+                        <strong>Région :</strong> ${loc.region || 'N/A'}
+                    </p>
+                </div>
+            `);
+
+            markers.push(marker);
+        });
+
+        console.log(`${filteredLockers.length} lockers affichés`);
+    }
+
+    // Initialisation filtre région
+    function initRegionFilter() {
+        const select = document.getElementById('regionFilter');
+        const regions = [...new Set(locations.map(l => l.region))].filter(Boolean);
+
+        regions.forEach(region => {
+            const option = document.createElement('option');
+            option.value = region;
+            option.textContent = region;
+            select.appendChild(option);
+        });
+
+        select.addEventListener('change', () => {
+            renderMap(select.value, document.getElementById('typeFilter').value);
+        });
+    }
+
+    // Stats
+    function updateStats() {
+        document.getElementById('totalLocations').textContent = locations.length;
+        document.getElementById('totalLockers').textContent = lockers.length;
+        document.getElementById('activeLockers').textContent =
+            lockers.filter(l => l.is_active).length;
+    }
+
+    function getTypeLabel(type) {
+        return {
+            'SUPERMARKET': 'Supermarché',
+            'STATION': 'Station-service',
+            'GARE': 'Gare routière'
+        }[type] || type;
+    }
+
+    // Chargement des données
+    async function loadData() {
+        locations = await apiCall('/locations/');
+        lockers = await apiCall('/lockers/');
+
+        if (!locations || !lockers) {
+            alert('Erreur lors du chargement des données');
+            return;
+        }
+
+        initRegionFilter();
+        updateStats();
+        renderMap();
+    }
+
+    document.getElementById('typeFilter').addEventListener('change', () => {
+        renderMap(
+            document.getElementById('regionFilter').value,
+            document.getElementById('typeFilter').value
+        );
+    });
+
+    loadData();
+</script>
+{% endblock %}

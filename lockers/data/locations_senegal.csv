@@ -1,0 +1,48 @@
+name,category,lat,lng,region,department,commune,estimated_traffic
+Aéroport Blaise Diagne,airport,14.6711,-17.0733,Thiès,Mbour,Diass,9000
+Aéroport Léopold Sédar Senghor,airport,14.7390,-17.4900,Dakar,Dakar,Yoff,12000
+Aéroport Saint-Louis,airport,16.0250,-16.4920,Saint-Louis,Saint-Louis,Saint-Louis,3000
+Aéroport Ziguinchor,airport,12.5720,-16.2700,Ziguinchor,Ziguinchor,Ziguinchor,2500
+
+Auchan Mermoz,supermarket,14.7044,-17.4756,Dakar,Dakar,Mermoz-Sacré-Cœur,12000
+Auchan Diamniadio,supermarket,14.6930,-17.3370,Dakar,Rufisque,Diamniadio,8000
+Auchan Yoff,supermarket,14.7385,-17.4925,Dakar,Dakar,Yoff,10000
+Auchan Guédiawaye,supermarket,14.7520,-17.3800,Dakar,Guédiawaye,Guédiawaye,9000
+Auchan Pikine,supermarket,14.7160,-17.4500,Dakar,Pikine,Pikine,8500
+Auchan Rufisque,supermarket,14.7150,-17.3000,Dakar,Rufisque,Rufisque,7000
+Auchan Ziguinchor,supermarket,12.5740,-16.2730,Ziguinchor,Ziguinchor,Ziguinchor,6000
+Auchan Saint-Louis,supermarket,16.0260,-16.4930,Saint-Louis,Saint-Louis,Saint-Louis,5000
+Auchan Kaolack,supermarket,14.1500,-16.0830,Kaolack,Kaolack,Kaolack,4000
+Auchan Tambacounda,supermarket,13.7800,-13.6700,Tambacounda,Tambacounda,Tambacounda,3000
+Auchan Louga,supermarket,15.6167,-16.2500,Louga,Louga,Louga,3500
+Auchan Kolda,supermarket,12.8833,-14.9500,Kolda,Kolda,Kolda,2500
+Auchan Thiès,supermarket,14.7833,-16.9667,Thiès,Thiès,Thiès,4500
+Auchan Mbour,supermarket,14.4300,-16.9700,Thiès,Mbour,Mbour,4000
+Auchan Saly,supermarket,14.4305,-16.9005,Thiès,Mbour,Saly,3000
+
+Gare Petersen,bus_station,14.6766,-17.4346,Dakar,Dakar,Plateau,15000
+Gare Liberté,bus_station,14.6935,-17.4460,Dakar,Dakar,Liberté,12000
+Gare Mermoz,bus_station,14.7060,-17.4780,Dakar,Dakar,Mermoz-Sacré-Cœur,11000
+Gare Yoff,bus_station,14.7380,-17.4920,Dakar,Dakar,Yoff,9000
+Gare Guédiawaye,bus_station,14.7525,-17.3810,Dakar,Guédiawaye,Guédiawaye,8000
+Gare Pikine,bus_station,14.7165,-17.4510,Dakar,Pikine,Pikine,7500
+Gare Rufisque,bus_station,14.7155,-17.3010,Dakar,Rufisque,Rufisque,7000
+Gare Thiès,bus_station,14.7900,-16.9670,Thiès,Thiès,Thiès,8000
+Gare Saint-Louis,bus_station,16.0200,-16.4890,Saint-Louis,Saint-Louis,Saint-Louis,5000
+Gare Ziguinchor,bus_station,12.5730,-16.2720,Ziguinchor,Ziguinchor,Ziguinchor,4000
+Gare Mbour,bus_station,14.4310,-16.9710,Thiès,Mbour,Mbour,6000
+Gare Kaolack,bus_station,14.1510,-16.0840,Kaolack,Kaolack,Kaolack,3000
+Gare Louga,bus_station,15.6175,-16.2505,Louga,Louga,Louga,3500
+Gare Kolda,bus_station,12.8838,-14.9505,Kolda,Kolda,Kolda,2500
+Gare Tambacounda,bus_station,13.7810,-13.6710,Tambacounda,Tambacounda,Tambacounda,2000
+
+Station Total Plateau,fuel_station,14.6708,-17.4370,Dakar,Dakar,Plateau,7000
+Station Shell Mermoz,fuel_station,14.7065,-17.4785,Dakar,Dakar,Mermoz-Sacré-Cœur,6000
+Station Vivo Grand-Yoff,fuel_station,14.7390,-17.4910,Dakar,Dakar,Yoff,5000
+Station Total Thiès,fuel_station,14.7890,-16.9660,Thiès,Thiès,Thiès,4000
+Station Shell Saint-Louis,fuel_station,16.0150,-16.4890,Saint-Louis,Saint-Louis,Saint-Louis,3000
+Station Vivo Ziguinchor,fuel_station,12.5740,-16.2735,Ziguinchor,Ziguinchor,Ziguinchor,2000
+Station Total Kaolack,fuel_station,14.1505,-16.0835,Kaolack,Kaolack,Kaolack,3500
+Station Shell Mbour,fuel_station,14.4315,-16.9715,Thiès,Mbour,Mbour,2500
+Station Vivo Louga,fuel_station,15.6180,-16.2510,Louga,Louga,Louga,2200
+Station Total Kolda,fuel_station,12.8840,-14.9510,Kolda,Kolda,Kolda,1800

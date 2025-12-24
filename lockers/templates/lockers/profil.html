@@ -1,0 +1,15 @@
+{% extends "lockers/base.html" %}
+
+{% block title %}Mon Profil - Pelicoli{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>👤 Mon Profil</h2>
+    <p><strong>Nom d'utilisateur :</strong> {{ request.user.username }}</p>
+    <p><strong>Email :</strong> {{ request.user.email }}</p>
+
+    {% if request.user.userprofile %}
+    <p><strong>Rôle :</strong> {{ request.user.userprofile.get_role_display }}</p>
+    {% endif %}
+</div>
+{% endblock %}

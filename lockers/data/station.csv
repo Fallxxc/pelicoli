@@ -1,0 +1,11 @@
+name,category,lat,lng,region,address,commune_name,estimated_traffic
+Station Total Plateau,station,14.6708,-17.4370,Dakar,Plateau,Dakar,7000
+Station Shell Mermoz,station,14.7060,-17.4780,Dakar,Mermoz,Dakar,6000
+Station Vivo Grand-Yoff,station,14.7380,-17.4920,Dakar,Yoff,Dakar,5000
+Station Total Thiès,station,14.7890,-17.0660,Thiès,Thiès,Thiès,4000
+Station Shell Saint-Louis,station,16.0150,-16.4890,Saint-Louis,Saint-Louis,Saint-Louis,3000
+Station Vivo Ziguinchor,station,12.5725,-16.2710,Ziguinchor,Ziguinchor,Ziguinchor,2000
+Station Total Kaolack,station,14.1505,-16.0835,Kaolack,Kaolack,Kaolack,3500
+Station Shell Mbour,station,14.4305,-16.9705,Mbour,Mbour,Mbour,2500
+Station Vivo Louga,station,15.6175,-16.2505,Louga,Louga,Louga,2200
+Station Total Kolda,station,12.8838,-14.9505,Kolda,Kolda,Kolda,1800

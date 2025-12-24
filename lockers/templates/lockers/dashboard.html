@@ -1,0 +1,180 @@
+{% extends "lockers/base.html" %}
+{% block title %}Dashboard - Pelicoli{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .stat-card h2 {
+        margin: 0;
+        font-size: 48px;
+        font-weight: bold;
+    }
+    .stat-card p {
+        margin: 10px 0 0 0;
+        font-size: 14px;
+        opacity: 0.9;
+    }
+    .stat-card.green {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    .stat-card.orange {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+    .stat-card.red {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+    .chart-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .chart-card h3 {
+        margin-top: 0;
+        color: #333;
+    }
+    .bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .bar-label {
+        width: 150px;
+        font-weight: bold;
+        color: #555;
+    }
+    .bar-fill {
+        height: 30px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>📊 Tableau de Bord</h1>
+
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <h2 id="totalLocations">0</h2>
+        <p>📍 Emplacements Totaux</p>
+    </div>
+    
+    <div class="stat-card green">
+        <h2 id="totalLockers">0</h2>
+        <p>🔒 Lockers Totaux</p>
+    </div>
+    
+    <div class="stat-card orange">
+        <h2 id="activeLockers">0</h2>
+        <p>✓ Lockers Actifs</p>
+    </div>
+    
+    <div class="stat-card red">
+        <h2 id="inactiveLockers">0</h2>
+        <p>✗ Lockers Inactifs</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📈 Répartition par Type d'Emplacement</h3>
+    <div id="typeChart"></div>
+</div>
+
+<div class="card">
+    <h3>📊 Répartition par Région</h3>
+    <div id="regionChart"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function loadDashboard() {
+    const locations = await apiCall('/locations/');
+    const lockers = await apiCall('/lockers/');
+
+    if (!locations || !lockers) {
+        alert('Erreur lors du chargement des données');
+        return;
+    }
+
+    // Statistiques globales
+    document.getElementById('totalLocations').textContent = locations.length;
+    document.getElementById('totalLockers').textContent = lockers.length;
+    
+    const activeCount = lockers.filter(l => l.is_active).length;
+    document.getElementById('activeLockers').textContent = activeCount;
+    document.getElementById('inactiveLockers').textContent = lockers.length - activeCount;
+
+    // Répartition par type
+    const typeCount = {};
+    locations.forEach(loc => {
+        typeCount[loc.location_type] = (typeCount[loc.location_type] || 0) + 1;
+    });
+
+    const typeLabels = {
+        'SUPERMARKET': 'Supermarchés',
+        'STATION': 'Stations-service',
+        'GARE': 'Gares routières'
+    };
+
+    const maxCount = Math.max(...Object.values(typeCount));
+    
+    let typeChartHTML = '';
+    Object.entries(typeCount).forEach(([type, count]) => {
+        const width = (count / maxCount) * 100;
+        typeChartHTML += `
+            <div class="bar">
+                <div class="bar-label">${typeLabels[type] || type}</div>
+                <div class="bar-fill" style="width: ${width}%;">${count}</div>
+            </div>
+        `;
+    });
+    document.getElementById('typeChart').innerHTML = typeChartHTML;
+
+    // Répartition par région
+    const regionCount = {};
+    locations.forEach(loc => {
+        if (loc.region) {
+            regionCount[loc.region] = (regionCount[loc.region] || 0) + 1;
+        }
+    });
+
+    const maxRegionCount = Math.max(...Object.values(regionCount));
+    
+    let regionChartHTML = '';
+    Object.entries(regionCount).forEach(([region, count]) => {
+        const width = (count / maxRegionCount) * 100;
+        regionChartHTML += `
+            <div class="bar">
+                <div class="bar-label">${region}</div>
+                <div class="bar-fill" style="width: ${width}%;">${count}</div>
+            </div>
+        `;
+    });
+    document.getElementById('regionChart').innerHTML = regionChartHTML;
+}
+
+loadDashboard();
+</script>
+{% endblock %}

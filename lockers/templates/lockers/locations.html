@@ -1,0 +1,112 @@
+{% extends "lockers/base.html" %}
+{% block title %}Emplacements - Pelicoli{% endblock %}
+
+{% block extra_css %}
+<style>
+    .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        color: white;
+    }
+    .badge-supermarket { background: #10b981; }
+    .badge-station { background: #f59e0b; }
+    .badge-gare { background: #ef4444; }
+    .locker-count {
+        background: #667eea;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>🏪 Emplacements</h1>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Région</th>
+                <th>Département</th>
+                <th>Commune</th>
+                <th>Lockers</th>
+            </tr>
+        </thead>
+        <tbody id="locationsTable">
+            <tr>
+                <td colspan="6" style="text-align: center; color: #666;">Chargement...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function loadLocations() {
+    const locations = await apiCall('/locations/');
+    const lockers = await apiCall('/lockers/');
+    
+    if (!locations || !lockers) {
+        document.getElementById('locationsTable').innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #ef4444;">
+                    Erreur lors du chargement des données
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    function getTypeLabel(type) {
+        const labels = {
+            'SUPERMARKET': 'Supermarché',
+            'STATION': 'Station-service',
+            'GARE': 'Gare routière'
+        };
+        return labels[type] || type;
+    }
+
+    function getTypeBadgeClass(type) {
+        const classes = {
+            'SUPERMARKET': 'badge-supermarket',
+            'STATION': 'badge-station',
+            'GARE': 'badge-gare'
+        };
+        return classes[type] || '';
+    }
+
+    document.getElementById('locationsTable').innerHTML = locations.map(l => {
+        const locationLockers = lockers.filter(locker => locker.location === l.id);
+        const badgeClass = getTypeBadgeClass(l.location_type);
+        
+        return `
+            <tr>
+                <td><strong>${l.name}</strong></td>
+                <td>
+                    <span class="badge ${badgeClass}">
+                        ${getTypeLabel(l.location_type)}
+                    </span>
+                </td>
+                <td>${l.region || 'N/A'}</td>
+                <td>${l.department || 'N/A'}</td>
+                <td>${l.commune || 'N/A'}</td>
+                <td>
+                    <span class="locker-count">${locationLockers.length} locker(s)</span>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+loadLocations();
+</script>
+{% endblock %}

@@ -1,0 +1,5 @@
+name,category,lat,lng,region,address,commune_name,estimated_traffic
+Aéroport Blaise Diagne,airport,14.6711,-17.0733,Thiès,Diass,Thiès,9000
+Aéroport Léopold Sédar Senghor,airport,14.7390,-17.4900,Dakar,Yoff,Dakar,12000
+Aéroport Saint-Louis,airport,16.0250,-16.4920,Saint-Louis,Saint-Louis,Saint-Louis,3000
+Aéroport Ziguinchor,airport,12.5720,-16.2700,Ziguinchor,Ziguinchor,Ziguinchor,2500
